@@ -21,9 +21,57 @@ body { margin: 0; padding: 0; }
         zoom: 8,
         center: [-74.5447, 40.6892]
     });
+	
+	
+	// pixels the map pans when the up or down arrow is clicked
+const deltaDistance = 100;
+ 
+// degrees the map rotates when the left or right arrow is clicked
+const deltaDegrees = 25;
+ 
+function easing(t) {
+return t * (2 - t);
+}
 
      map.on('load', () => {
-        map.addSource('mapright_test', {
+       
+	     map.on('load', () => {
+map.getCanvas().focus();
+ 
+map.getCanvas().addEventListener(
+'keydown',
+(e) => {
+e.preventDefault();
+if (e.which === 38) {
+// up
+map.panBy([0, -deltaDistance], {
+easing: easing
+});
+} else if (e.which === 40) {
+// down
+map.panBy([0, deltaDistance], {
+easing: easing
+});
+} else if (e.which === 37) {
+// left
+map.easeTo({
+bearing: map.getBearing() - deltaDegrees,
+easing: easing
+});
+} else if (e.which === 39) {
+// right
+map.easeTo({
+bearing: map.getBearing() + deltaDegrees,
+easing: easing
+});
+}
+},
+true
+);
+	     
+	     
+	     
+	     map.addSource('mapright_test', {
             'type': 'raster',
             // use the tiles option to specify a WMS tile source URL
             // https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/
